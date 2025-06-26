@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富國島8天7夜 - 蜜月旅行呵呵</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Yomogi', sans-serif;
+            background: linear-gradient(135deg, #40C4FF 0%, #FFF8E1 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 248, 225, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            padding: 20px;
+        }
+        .header {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2340C4FF" fill-opacity="0.8" d="M0,160L48,138.7C96,117,192,75,288,80C384,85,480,139,576,149.3C672,160,768,128,864,112C960,96,1056,96,1152,117.3C1248,139,1344,181,1392,202.7L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') bottom, linear-gradient(#40C4FF, transparent);
+            background-size: cover;
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            border-radius: 20px 20px 0 0;
+        }
+        .header h1 {
+            font-family: 'Amatic SC', cursive;
+            font-size: 2.5em;
+            color: #FF6F61;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0;
+        }
+        .header p {
+            font-size: 1.1em;
+            color: #FFF8E1;
+            margin: 5px 0;
+        }
+        .progress-map {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .progress-map span {
+            font-size: 0.8em;
+            cursor: pointer;
+            color: #FF6F61;
+            transition: transform 0.3s;
+        }
+        .progress-map span.active {
+            transform: scale(1.2);
+            font-weight: bold;
+        }
+        .progress-map span::before {
+            content: '🌴';
+            display: block;
+        }
+        .day {
+            perspective: 1000px;
+            margin: 15px 0;
+        }
+        .day-header {
+            BACKGROUND: #FF6F61;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.6s, background 0.3s;
+            font-family: 'Amatic SC', cursive;
+            font-size: 1.5em;
+        }
+        .day-header:hover {
+            background: #FFCA28;
+            transform: rotateY(15deg);
+        }
+        .day-content {
+            display: none;
+            padding: 20px;
+            background: #FFF8E1;
+            border-radius: 0 0 15px 15px;
+            transform: rotateY(180deg);
+            transition: transform 0.6s, opacity 0.6s;
+            opacity: 0;
+        }
+        .day-content.show {
+            display: block;
+            transform: rotateY(0);
+            opacity: 1;
+        }
+        .activity {
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        .activity:hover {
+            transform: scale(1.1) translateY(-5px);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .activity i {
+            margin-right: 15px;
+            color: #FFCA28;
+            font-size: 1.3em;
+            transition: transform 0.3s;
+        }
+        .activity:hover i {
+            transform: rotate(360deg);
+        }
+        .activity span {
+            font-size: 0.9em;
+            color: #FF6F61;
+            background: #FFF8E1;
+            padding: 5px 10px;
+            border-radius: 15px;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .activity:hover span {
+            display: block;
+        }
+        .sunset {
+            position: relative;
+        }
+        .sunset::before {
+            content: '🌅';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            font-size: 2em;
+            transform: translateX(-50%);
+            animation: sunset 5s infinite;
+        }
+        @keyframes sunset {
+            0% { top: -40px; opacity: 1; }
+            100% { top: 50px; opacity: 0; }
+        }
+        .nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav a {
+            background: #FFCA28;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .nav a:hover {
+            background: #FF6F61;
+            transform: scale(1.2);
+        }
+        .coconut {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 2em;
+            animation: drop 10s infinite;
+        }
+        @keyframes drop {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .day-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+            .activity {
+                font-size: 0.8em;
+                padding: 10px;
+            }
+            .nav {
+                right: 10px;
+                gap: 5px;
+            }
+            .nav a {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="coconut">🥥</div>
+    <div class="container">
+        <div class="header">
+            <h1>富國島8天7夜 - 魔法海島日記</h1>
+            <p>2024年8月31日 - 9月7日</p>
+            <p>快來翻開你的熱帶冒險故事！</p>
+            <div class="progress-map">
+                <span onclick="scrollToDay(1)">Day 1</span>
+                <span onclick="scrollToDay(2)">Day 2</span>
+                <span onclick="scrollToDay(3)">Day 3</span>
+                <span onclick="scrollToDay(4)">Day 4</span>
+                <span onclick="scrollToDay(5)">Day 5</span>
+                <span onclick="scrollToDay(6)">Day 6</span>
+                <span onclick="scrollToDay(7)">Day 7</span>
+                <span onclick="scrollToDay(8)">Day 8</span>
+            </div>
+        </div>
+        <div class="day" id="day1">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 1: 8月31日 - 跳進富國島的懷抱！</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-plane"></i>14:10-16:50 桃園飛富國島，冒險開始！<span>哇！終於到海島啦！</span></div>
+                <div class="activity"><i class="fas fa-bus"></i>18:00-19:00 VinBus到河濱迷你世界飯店<span>椰林海風超chill！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>19:30-21:00 Madam Khánh大吃越南美食<span>海鮮控要瘋了！</span></div>
+                <div class="activity"><i class="fas fa-water"></i>21:30-22:00 水舞秀，燈光閃閃<span>好夢幻的開場！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day2">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 2: 9月1日 - 珍珠樂園瘋狂嗨</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>08:00-09:00 復國大世界早餐<span>吃飽準備大玩！</span></div>
+                <div class="activity"><i class="fas fa-roller-coaster"></i>09:00-11:30 珍珠樂園刺激遊樂<span>心跳砰砰響！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>11:30-14:00 Deepsea Restaurant海底午餐<span>像在海底用餐！</span></div>
+                <div class="activity"><i class="fas fa-fish"></i>14:00-14:10 美人魚表演<span>美到冒泡！</span></div>
+                <div class="activity"><i class="fas fa-water"></i>下午 水樂園清涼一夏<span>玩水超開心！</span></div>
+                <div class="activity"><i class="fas fa-theater-masks"></i>18:30 城堡閉幕秀<span>震撼到不想走！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day3">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 3: 9月2日 - 動物園 & 入住貝殼酒店</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>08:00-09:00 早餐後退房<span>新一天新冒險！</span></div>
+                <div class="activity"><i class="fas fa-paw"></i>09:00-14:00 富國島動物園<span>動物們超萌！</span></div>
+                <div class="activity"><i class="fas fa-ship"></i>14:30-15:30 貢多拉水上行<span>浪漫到不行！</span></div>
+                <div class="activity"><i class="fas fa-hotel"></i>15:30-17:00 入住貝殼酒店<span>新家好舒服！</span></div>
+                <div class="activity"><i class="fas fa-money-bill"></i>17:00-17:30 Robinson Pearl換匯<span>準備買買買！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>17:30-19:00 MEO kitchen晚餐<span>越南味爆棚！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>19:15-21:30 金剛超市<span>囤貨囉！</span></div>
+                <div class="activity"><i class="fas fa-fire"></i>22:00 OCSEN火舞表演<span>夜生活high翻！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day4">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 4: 9月3日 - 悠閒海島時光</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 貝殼酒店早餐<span>悠閒早安！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>上午 享受酒店設施<span>度假感滿點！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>午餐 楊東夜市米線/河粉<span>道地美食讚！</span></div>
+                <div class="activity"><i class="fas fa-coffee"></i>下午 Green芒果冰沙<span>清涼爆表！</span></div>
+                <div class="activity sunset"><i class="fas fa-sun"></i>16:30 ON THE ROCK日落餐廳<span>夕陽美到哭！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 塔口特色料理<span>滿足味蕾！</span></div>
+                <div class="activity"><i class="fas fa-store"></i>晚上 楊東夜市<span>夜市超熱鬧！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day5">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 5: 9月4日 - 香島 & 日落小鎮</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>07:30-08:45 早餐 + 退房<span>新旅程出發！</span></div>
+                <div class="activity"><i class="fas fa-hotel"></i>08:45-09:10 都喜公主酒店<span>新家好棒！</span></div>
+                <div class="activity"><i class="fas fa-cable-car"></i>09:10-15:30 跨海纜車到香島<span>海景無敵美！</span></div>
+                <div class="activity"><i class="fas fa-walking"></i>15:30 日落小鎮漫步<span>好悠閒！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>16:00-17:00 Hanz Sunset Spa<span>放鬆到飛起！</span></div>
+                <div class="activity sunset"><i class="fas fa-coffee"></i>17:00-18:00 雞蛋咖啡 + 日落<span>浪漫到心動！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>18:00-19:30 Thư's Kitchen越南料理<span>家的味道！</span></div>
+                <div class="activity"><i class="fas fa-store"></i>19:30-21:00 VUI-Fest夜市<span>紀念品get！</span></div>
+                <div class="activity"><i class="fas fa-theater-masks"></i>21:00-21:30 親吻秀<span>甜到冒泡！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>21:30-23:00 Nga Lam海鮮餐廳<span>皮皮蝦好吃！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day6">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 6: 9月5日 - SPA & 美食派對</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 都喜公主早餐<span>優雅開啟！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>中午 BBQ烤肉<span>大口吃肉啦！</span></div>
+                <div class="activity"><i class="fas fa-coffee"></i>下午 ANBA椰子咖啡<span>椰香滿滿！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>下午 特色泥漿浴<span>全身超放鬆！</span></div>
+                <div class="activity sunset"><i class="fas fa-utensils"></i>16:30 卡蜜亞日落餐廳<span>夕陽配美食！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 龍蝦麵<span>龍蝦控天堂！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>晚上 金剛超市補貨<span>零食囤起來！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day7">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 7: 9月6日 - 海灘 & 伴手禮</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 都喜公主早餐<span>悠閒早安！</span></div>
+                <div class="activity"><i class="fas fa-umbrella-beach"></i>下午 東部海灘<span>陽光沙灘超棒！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>午餐 風味炒飯<span>簡單又好吃！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>下午 金剛超市伴手禮<span>滿滿回憶！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 隨心安排<span>最後一晚好不捨！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day8">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 8: 9月7日 - 帶著回憶回家</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-suitcase"></i>早上 整理行李<span>滿滿回憶！</span></div>
+                <div class="activity"><i class="fas fa-plane"></i>08:10 搭機返台<span>下次再來哦！</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav">
+        <a href="#day1" onclick="scrollToDay(1)">🥥 1</a>
+        <a href="#day2" onclick="scrollToDay(2)">🥥 2</a>
+        <a href="#day3" onclick="scrollToDay(3)">🥥 3</a>
+        <a href="#day4" onclick="scrollToDay(4)">🥥 4</a>
+        <a href="#day5" onclick="scrollToDay(5)">🥥 5</a>
+        <a href="#day6" onclick="scrollToDay(6)">🥥 6</a>
+        <a href="#day7" onclick="scrollToDay(7)">🥥 7</a>
+        <a href="#day8" onclick="scrollToDay(8)">🥥 8</a>
+    </div>
+    <script>
+        function toggleDay(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('show');
+            const icon = element.querySelector('i');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+        function scrollToDay(day) {
+            const dayElement = document.querySelector(`#day${day} .day-header`);
+            dayElement.scrollIntoView({ behavior: 'smooth' });
+            dayElement.click();
+            updateProgress(day);
+        }
+        function updateProgress(day) {
+            const spans = document.querySelectorAll('.progress-map span');
+            spans.forEach((span, index) => {
+                span.classList.toggle('active', index + 1 <= day);
+            });
+        }
+        // 初始化第一天
+        updateProgress(1);
+    </script>
+</body>
+</html>

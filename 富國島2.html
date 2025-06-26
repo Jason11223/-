@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富國島8天7夜 - 沉浸式海島日記</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: linear-gradient(135deg, #01579B 0%, #FF8A80 100%);
+            --card-bg: rgba(236, 239, 241, 0.9);
+            --text-color: #263238;
+            --accent-color: #FF5722;
+            --highlight-color: #26A69A;
+        }
+        .dark-mode {
+            --bg-color: linear-gradient(135deg, #0D47A1 0%, #D81B60 100%);
+            --card-bg: rgba(33, 33, 33, 0.9);
+            --text-color: #ECEFF1;
+            --accent-color: #FF8A80;
+            --highlight-color: #4DD0E1;
+        }
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            position: relative;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2301579B" fill-opacity="0.5" d="M0,160L48,138.7C96,117,192,75,288,80C384,85,480,139,576,149.3C672,160,768,128,864,112C960,96,1056,96,1152,117.3C1248,139,1344,181,1392,202.7L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>');
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .header {
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            border-radius: 20px 20px 0 0;
+        }
+        .header h1 {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 2.8em;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin: 0;
+            animation: type 2s steps(30, end);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        @keyframes type {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        .header p {
+            font-size: 1.2em;
+            color: var(--text-color);
+            margin: 5px 0;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.3s;
+        }
+        .theme-toggle:hover {
+            transform: rotate(360deg);
+        }
+        .progress-wave {
+            height: 12px;
+            background: var(--highlight-color);
+            width: 0;
+            transition: width 1s ease-in-out;
+            border-radius: 5px;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-wave::before {
+            content: '🌊';
+            position: absolute;
+            right: 0;
+            font-size: 1.5em;
+            animation: wave 2s infinite;
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .day {
+            perspective: 1000px;
+            margin: 15px 0;
+        }
+        .day-header {
+            background: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 1.6em;
+            transition: transform 0.5s, background 0.3s;
+        }
+        .day-header:hover {
+            background: var(--highlight-color);
+            transform: rotateX(10deg);
+        }
+        .day-content {
+            display: none;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 0 0 15px 15px;
+            transform: rotateX(90deg);
+            transition: transform 0.5s, opacity 0.5s;
+            opacity: 0;
+        }
+        .day-content.show {
+            display: block;
+            transform: rotateX(0);
+            opacity: 1;
+        }
+        .activity {
+            margin: 10px 0;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            animation: bubble 3s ease-in-out infinite;
+        }
+        @keyframes bubble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .activity:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .activity i {
+            margin-right: 15px;
+            color: var(--accent-color);
+            font-size: 1.4em;
+            animation: splash 2s infinite;
+        }
+        @keyframes splash {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .activity span {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 0.9em;
+            color: var(--accent-color);
+            background: var(--card-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .activity:hover span {
+            display: block;
+            animation: pop 0.3s;
+        }
+        @keyframes pop {
+            0% { transform: translateX(-50%) scale(0); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+        .sunset {
+            position: relative;
+        }
+        .sunset::before {
+            content: '⛵';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            font-size: 2em;
+            animation: sail 5s linear infinite;
+        }
+        @keyframes sail {
+            0% { right: -50px; }
+            100% { right: 100%; }
+        }
+        .nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav a {
+            background: var(--accent-color);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .nav a:hover {
+            background: var(--highlight-color);
+            transform: scale(1.2) rotate(360deg);
+        }
+        .crab {
+            position: absolute;
+            bottom: 10px;
+            left: -50px;
+            font-size: 2em;
+            animation: scuttle 15s infinite;
+        }
+        @keyframes scuttle {
+            0% { left: -50px; }
+            50% { left: 50%; }
+            100% { left: 100%; }
+        }
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .day-header {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+            .activity {
+                font-size: 0.8em;
+                padding: 10px;
+            }
+            .nav {
+                right: 10px;
+                gap: 5px;
+            }
+            .nav a {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="crab">🦀</div>
+    <div class="container">
+        <div class="header">
+            <h1>富國島8天7夜 - 沉浸式海島日記</h1>
+            <p>2024年8月31日 - 9月7日</p>
+            <p>潛入海鮮、水樂園、威尼斯的熱帶冒險！</p>
+            <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+            <div class="progress-wave" id="progress"></div>
+        </div>
+        <div class="day" id="day1">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 1: 8月31日 - 跳進富國島海浪！</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-plane"></i>14:10-16:50 桃園飛富國島，開啟海島冒險！<span>海風迎面，太興奮啦！</span></div>
+                <div class="activity"><i class="fas fa-bus"></i>18:00-19:00 VinBus到河濱迷你世界飯店<span>椰樹搖曳，度假開始！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>19:30-21:00 Madam Khánh海鮮大餐<span>這海鮮鮮到冒泡！</span></div>
+                <div class="activity"><i class="fas fa-water"></i>21:30-22:00 水舞秀，波光閃耀<span>像海底派對！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day2">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 2: 9月1日 - 水樂園大狂歡</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>08:00-09:00 復國大世界早餐<span>吃飽準備衝水樂園！</span></div>
+                <div class="activity"><i class="fas fa-roller-coaster"></i>09:00-11:30 珍珠樂園刺激遊樂<span>心跳像浪花！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>11:30-14:00 Deepsea Restaurant海底午餐<span>海鮮餐超夢幻！</span></div>
+                <div class="activity"><i class="fas fa-fish"></i>14:00-14:10 美人魚表演<span>像潛入海底世界！</span></div>
+                <div class="activity"><i class="fas fa-water"></i>下午 水樂園清涼戲水<span>水花四濺好開心！</span></div>
+                <div class="activity"><i class="fas fa-theater-masks"></i>18:30 城堡閉幕秀<span>震撼到不想離開！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day3">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 3: 9月2日 - 動物園 & 威尼斯浪漫</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>08:00-09:00 早餐後退房<span>新冒險啟航！</span></div>
+                <div class="activity"><i class="fas fa-paw"></i>09:00-14:00 富國島動物園<span>海島動物超萌！</span></div>
+                <div class="activity"><i class="fas fa-ship"></i>14:30-15:30 貢多拉搭船，威尼斯風情<span>浪漫到像電影！</span></div>
+                <div class="activity"><i class="fas fa-hotel"></i>15:30-17:00 入住貝殼酒店<span>新家像海底宮殿！</span></div>
+                <div class="activity"><i class="fas fa-money-bill"></i>17:00-17:30 Robinson Pearl換匯<span>準備買海島寶藏！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>17:30-19:00 MEO kitchen海鮮晚餐<span>海味爆棚！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>19:15-21:30 金剛超市採購<span>囤點海島零食！</span></div>
+                <div class="activity"><i class="fas fa-fire"></i>22:00 OCSEN火舞表演<span>海邊派對high起來！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day4">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 4: 9月3日 - 悠閒海島時光</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 貝殼酒店早餐<span>海島早晨好chill！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>上午 享受酒店設施<span>像泡在海水裡！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>午餐 楊東夜市米線/河粉<span>海鮮湯頭超讚！</span></div>
+                <div class="activity"><i class="fas fa-coffee"></i>下午 Green芒果冰沙<span>清涼到冒泡！</span></div>
+                <div class="activity sunset"><i class="fas fa-sun"></i>16:30 ON THE ROCK日落餐廳<span>夕陽美到像畫！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 塔口海鮮料理<span>鮮味滿分！</span></div>
+                <div class="activity"><i class="fas fa-store"></i>晚上 楊東夜市<span>夜市像海島派對！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day5">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 5: 9月4日 - 香島 & 威尼斯日落</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>07:30-08:45 早餐 + 退房<span>準備新冒險！</span></div>
+                <div class="activity"><i class="fas fa-hotel"></i>08:45-09:10 都喜公主酒店<span>新家像海島城堡！</span></div>
+                <div class="activity"><i class="fas fa-cable-car"></i>09:10-15:30 跨海纜車到香島<span>海上風景超夢幻！</span></div>
+                <div class="activity"><i class="fas fa-walking"></i>15:30 日落小鎮漫步<span>像走在威尼斯街頭！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>16:00-17:00 Hanz Sunset Spa<span>洗頭像泡海水浴！</span></div>
+                <div class="activity sunset"><i class="fas fa-coffee"></i>17:00-18:00 雞蛋咖啡 + 日落<span>浪漫到心跳加速！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>18:00-19:30 Thư's Kitchen海鮮料理<span>家常味好溫暖！</span></div>
+                <div class="activity"><i class="fas fa-store"></i>19:30-21:00 VUI-Fest夜市<span>買到海島紀念品！</span></div>
+                <div class="activity"><i class="fas fa-theater-masks"></i>21:00-21:30 親吻秀<span>甜到像海浪親吻沙灘！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>21:30-23:00 Nga Lam皮皮蝦大餐<span>海鮮控的天堂！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day6">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 6: 9月5日 - 水樂園 & 海鮮派對</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 都喜公主早餐<span>優雅的海島早晨！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>中午 BBQ烤肉<span>海邊烤肉超香！</span></div>
+                <div class="activity"><i class="fas fa-coffee"></i>下午 ANBA椰子咖啡<span>椰香像海浪！</span></div>
+                <div class="activity"><i class="fas fa-spa"></i>下午 特色泥漿浴<span>像泡在海底溫泉！</span></div>
+                <div class="activity sunset"><i class="fas fa-utensils"></i>16:30 卡蜜亞日落餐廳<span>夕陽配海鮮，完美！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 龍蝦麵<span>這龍蝦鮮到飛起！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>晚上 金剛超市補貨<span>囤點海島零食！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day7">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 7: 9月6日 - 海灘 & 海島禮物</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-utensils"></i>早餐 都喜公主早餐<span>海島最後一天早餐！</span></div>
+                <div class="activity"><i class="fas fa-umbrella-beach"></i>下午 東部海灘<span>陽光沙灘超chill！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>午餐 風味炒飯<span>海邊小吃好滿足！</span></div>
+                <div class="activity"><i class="fas fa-shopping-cart"></i>下午 金剛超市伴手禮<span>帶回海島回憶！</span></div>
+                <div class="activity"><i class="fas fa-utensils"></i>晚餐 隨心安排<span>最後一晚好不捨！</span></div>
+            </div>
+        </div>
+        <div class="day" id="day8">
+            <div class="day-header" onclick="toggleDay(this)">
+                <span>Day 8: 9月7日 - 帶著海島回憶回家</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="day-content">
+                <div class="activity"><i class="fas fa-suitcase"></i>早上 整理行李<span>滿滿海島記憶！</span></div>
+                <div class="activity"><i class="fas fa-plane"></i>08:10 搭機返台<span>下次再來富國島！</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav">
+        <a href="#day1" onclick="scrollToDay(1)">🌟 1</a>
+        <a href="#day2" onclick="scrollToDay(2)">🌟 2</a>
+        <a href="#day3" onclick="scrollToDay(3)">🌟 3</a>
+        <a href="#day4" onclick="scrollToDay(4)">🌟 4</a>
+        <a href="#day5" onclick="scrollToDay(5)">🌟 5</a>
+        <a href="#day6" onclick="scrollToDay(6)">🌟 6</a>
+        <a href="#day7" onclick="scrollToDay(7)">🌟 7</a>
+        <a href="#day8" onclick="scrollToDay(8)">🌟 8</a>
+    </div>
+    <script>
+        function toggleDay(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('show');
+            const icon = element.querySelector('i');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+        function scrollToDay(day) {
+            const dayElement = document.querySelector(`#day${day} .day-header`);
+            dayElement.scrollIntoView({ behavior: 'smooth' });
+            dayElement.click();
+            updateProgress(day);
+        }
+        function updateProgress(day) {
+            const progressBar = document.getElementById('progress');
+            const percentage = (day / 8) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+        updateProgress(1);
+    </script>
+</body>
+</html>
